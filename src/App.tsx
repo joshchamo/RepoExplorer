@@ -258,7 +258,7 @@ export default function App() {
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
-               <thead className="bg-[#161B22] border-b border-[#30363D]">
+                <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[220px]">Repository</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider">Description</th>
@@ -278,7 +278,7 @@ export default function App() {
                         <div className="flex items-center gap-2 truncate">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
                           <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate block">
-                          {repo.organization}/{repo.repo_name}
+                            {repo.organization}/{repo.repo_name}
                           </span>
                         </div>
                       </td>
@@ -286,7 +286,7 @@ export default function App() {
                         <p className="text-[#8B949E] text-sm truncate">
                           {repo.description}
                         </p>
-                      </td>  
+                      </td>
                       <td className="px-4 py-3">
                         {repo.language && (
                           <div className="flex items-center gap-1.5">
