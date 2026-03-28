@@ -37,8 +37,8 @@ async function fetchTopRepos() {
     const data = await response.json();
     allRepos = allRepos.concat(data.items);
 
-    // Sleep for 2 seconds between requests to respect GitHub's rate limits
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Sleep for 5 seconds between requests to respect GitHub's strict Search API rate limits
+    await new Promise(resolve => setTimeout(resolve, 5000));
   }
 
   console.log(`Successfully fetched ${allRepos.length} repositories. Formatting data...`);
