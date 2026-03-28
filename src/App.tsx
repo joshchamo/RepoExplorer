@@ -77,12 +77,15 @@ export default function App() {
       filtered = filtered.filter(repo => {
         // Simple search logic. Could be extended to support "lang:rust" etc.
         if (query.startsWith('lang:')) {
-          const lang = query.split(':')[1].trim();
-          return repo.language?.toLowerCase().includes(lang);
+          const lang = query.split(':')[1]?.trim() || '';
+          return repo.language ? repo.language.toLowerCase().includes(lang) : false;
         }
-        return repo.repo_name?.toLowerCase().includes(query) || 
-               repo.description?.toLowerCase().includes(query) ||
-               repo.language?.toLowerCase().includes(query);
+        
+        const nameMatch = repo.repo_name ? repo.repo_name.toLowerCase().includes(query) : false;
+        const descMatch = repo.description ? repo.description.toLowerCase().includes(query) : false;
+        const langMatch = repo.language ? repo.language.toLowerCase().includes(query) : false;
+        
+        return nameMatch || descMatch || langMatch;
       });
     }
 
