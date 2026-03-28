@@ -78,12 +78,13 @@ export default function App() {
         // Simple search logic. Could be extended to support "lang:rust" etc.
         if (query.startsWith('lang:')) {
           const lang = query.split(':')[1]?.trim() || '';
-          return repo.language ? repo.language.toLowerCase().includes(lang) : false;
+          return repo.language ? String(repo.language).toLowerCase().includes(lang) : false;
         }
         
-        const nameMatch = repo.repo_name ? repo.repo_name.toLowerCase().includes(query) : false;
-        const descMatch = repo.description ? repo.description.toLowerCase().includes(query) : false;
-        const langMatch = repo.language ? repo.language.toLowerCase().includes(query) : false;
+        // FIX: Safely convert everything to a string first so numbers don't crash the app
+        const nameMatch = String(repo.repo_name || '').toLowerCase().includes(query);
+        const descMatch = String(repo.description || '').toLowerCase().includes(query);
+        const langMatch = String(repo.language || '').toLowerCase().includes(query);
         
         return nameMatch || descMatch || langMatch;
       });
