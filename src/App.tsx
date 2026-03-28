@@ -377,37 +377,69 @@ export default function App() {
                 </div>
               )}
 
+              {/* Topics / Tags */}
+              {selectedRepo.topics && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {String(selectedRepo.topics).split('|').filter(Boolean).slice(0, 8).map((topic, idx) => (
+                    <span key={idx} className="px-2.5 py-1 rounded-full bg-[#3d93f5]/10 text-[#3d93f5] text-[11px] font-medium border border-[#3d93f5]/20">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
                   <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5" /> Age
+                    <Clock className="w-3.5 h-3.5" /> Last Updated
                   </span>
-                  <span className="text-[15px] font-bold text-white mono-text">{formatAge(selectedRepo.age_days)}</span>
-                </div>
-                <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
-                  <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
-                    <Shield className="w-3.5 h-3.5" /> Code of Conduct
-                  </span>
-                  <span className={cn("text-[15px] font-bold mono-text", selectedRepo.has_coc ? "text-[#3FB950]" : "text-[#8B949E]")}>
-                    {selectedRepo.has_coc ? 'Yes' : 'No'}
+                  <span className="text-[14px] font-bold text-white mono-text">
+                    {selectedRepo.last_updated === 0 ? 'Today' : `${selectedRepo.last_updated} days ago`}
                   </span>
                 </div>
                 <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
                   <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
-                    <Activity className="w-3.5 h-3.5" /> Workflows
+                    <Shield className="w-3.5 h-3.5" /> License
                   </span>
-                  <span className={cn("text-[15px] font-bold mono-text", selectedRepo.has_workflows ? "text-[#3FB950]" : "text-[#8B949E]")}>
+                  <span className="text-[13px] font-bold text-[#C9D1D9] truncate" title={selectedRepo.license}>
+                    {selectedRepo.license || 'None'}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
+                  <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
+                    <Activity className="w-3.5 h-3.5" /> Age
+                  </span>
+                  <span className="text-[14px] font-bold text-white mono-text">{formatAge(selectedRepo.age_days)}</span>
+                </div>
+                <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
+                  <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
+                    <CheckCircle className="w-3.5 h-3.5" /> Workflows
+                  </span>
+                  <span className={cn("text-[14px] font-bold mono-text", selectedRepo.has_workflows ? "text-[#3FB950]" : "text-[#8B949E]")}>
                     {selectedRepo.has_workflows ? 'Active' : 'None'}
                   </span>
                 </div>
-                <div className="flex flex-col gap-1.5 rounded-lg p-3 border border-[#30363D] bg-[#0D1117]">
-                  <span className="text-[11px] text-[#8B949E] uppercase tracking-wider font-medium flex items-center gap-1.5">
-                    <CheckCircle className="w-3.5 h-3.5" /> Contributing
-                  </span>
-                  <span className={cn("text-[15px] font-bold mono-text", selectedRepo.has_contributing ? "text-[#3FB950]" : "text-[#8B949E]")}>
-                    {selectedRepo.has_contributing ? 'Yes' : 'No'}
-                  </span>
-                </div>
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-[#30363D]">
+                {selectedRepo.homepage && (
+                  <a 
+                    href={selectedRepo.homepage.startsWith('http') ? selectedRepo.homepage : `https://${selectedRepo.homepage}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-[#30363D] hover:bg-[#3d93f5] text-white text-sm font-medium py-2.5 px-4 rounded-md transition-colors">
+                    <ExternalLink className="w-4 h-4" />
+                    Visit Website
+                  </a>
+                )}
+                <a 
+                  href={`https://github.com/${selectedRepo.organization}/${selectedRepo.repo_name}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 w-full bg-[#238636] hover:bg-[#2ea043] text-white text-sm font-medium py-2.5 px-4 rounded-md transition-colors border border-[rgba(240,246,252,0.1)]">
+                  <Book className="w-4 h-4" />
+                  View on GitHub
+                </a>
               </div>
 
               <div className="space-y-3 pt-2">
