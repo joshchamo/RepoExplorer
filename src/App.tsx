@@ -314,17 +314,6 @@ export default function App() {
             </header>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              <div className="p-3.5 bg-[#3d93f5]/5 border border-[#3d93f5]/20 rounded-lg">
-                <div className="flex items-center gap-1.5 text-[#3d93f5] mb-1.5">
-                  <Star className="w-4 h-4" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">AI Insight</span>
-                </div>
-                <p className="text-[13px] text-[#C9D1D9] italic leading-relaxed">
-                  {selectedRepo.repo_name} is a highly active repository maintained by {selectedRepo.organization}. 
-                  With {formatNumber(selectedRepo.stars)} stars and {formatNumber(selectedRepo.forks)} forks, it is a significant project in the open-source ecosystem.
-                </p>
-              </div>
-
               <div>
                 <p className="text-[14px] text-[#C9D1D9] leading-relaxed">
                   {selectedRepo.description}

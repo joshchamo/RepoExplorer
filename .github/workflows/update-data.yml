@@ -1,0 +1,45 @@
+name: Update Top 1000 Repos Dataset
+
+on:
+  # 1. Run automatically every Sunday at midnight UTC
+  schedule:
+    - cron: '0 0 * * 0'
+  
+  # 2. Allow manual triggering from the GitHub Actions UI
+  workflow_dispatch:
+
+# Give the Action permission to push commits back to the repository
+permissions:
+  contents: write
+
+jobs:
+  update-dataset:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch latest GitHub data
+        # The GITHUB_TOKEN is automatically provided by GitHub Actions for authentication
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/update-dataset.mjs
+
+      - name: Commit and push changes
+        run: |
+          # Configure Git to act as the GitHub Actions bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Stage the updated CSV file
+          git add public/top_1000_os_github.csv
+          
+          # Check if there are any changes. If yes, commit and push.
+          # This prevents the action from failing if the data hasn't changed.
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update top 1000 repos dataset" && git push)
