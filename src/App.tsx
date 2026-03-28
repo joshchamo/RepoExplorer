@@ -257,10 +257,10 @@ export default function App() {
             </div>
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[800px]">
+              <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px]">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[160px]">Repository</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider">Description</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px]">Language</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Stars</th>
