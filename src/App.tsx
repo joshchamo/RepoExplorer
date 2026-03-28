@@ -221,17 +221,8 @@ export default function App() {
                   onClick={() => setSelectedRepo(repo)}
                   className="flex flex-col h-[200px] bg-[#161B22] border border-[#30363D] rounded-lg relative overflow-hidden group hover:border-[#8B949E] cursor-pointer transition-colors"
                 >
-                  <div className="absolute top-3 right-3 flex gap-1.5 items-center">
-                    {repo.language && (
-                      <div className="flex items-center gap-1.5 bg-[#0D1117] border border-[#30363D] px-2 py-1 rounded-md">
-                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8B949E' }} />
-                        <span className="text-[11px] text-[#8B949E] font-mono">{repo.language}</span>
-                      </div>
-                    )}
-                  </div>
-                  
                   <div className="p-4 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-2 pr-16">
+                    <div className="flex items-center gap-2 mb-2">
                       <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
                       <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate">
                         {repo.organization}/{repo.repo_name}
@@ -243,7 +234,7 @@ export default function App() {
                   </div>
                   
                   <div className="h-10 border-t border-[#30363D] flex items-center px-4 bg-[#0D1117]/50 justify-between shrink-0">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 items-center">
                       <div className="flex items-center gap-1.5 text-[#8B949E]" title="Stars">
                         <Star className="w-3.5 h-3.5" />
                         <span className="font-mono text-[12px] text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
@@ -252,6 +243,12 @@ export default function App() {
                         <GitFork className="w-3.5 h-3.5" />
                         <span className="font-mono text-[12px] text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
                       </div>
+                      {repo.language && (
+                        <div className="flex items-center gap-1.5 ml-1" title="Language">
+                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8B949E' }} />
+                          <span className="text-[11px] text-[#8B949E] font-mono">{repo.language}</span>
+                        </div>
+                      )}
                     </div>
                     <span className="text-[11px] text-[#8B949E] font-mono">{formatAge(repo.age_days)}</span>
                   </div>
@@ -263,7 +260,7 @@ export default function App() {
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[250px]">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[180px]">Repository</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider">Description</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px]">Language</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Stars</th>
