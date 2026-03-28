@@ -44,4 +44,4 @@ jobs:
           
           # Check if there are any changes. If yes, commit and push.
           # This prevents the action from failing if the data hasn't changed.
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update top 1000 repos dataset" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update top 1000 repos dataset" && git pull --rebase origin main && git push)
