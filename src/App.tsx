@@ -420,8 +420,22 @@ export default function App() {
                   </span>
                 </div>
               </div>
+              <div className="space-y-3 pt-2">
+                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Project Velocity</h3>
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex justify-between items-center p-3 border border-[#30363D] bg-[#0D1117]/50 rounded-lg">
+                    <div className="flex flex-col">
+                      <span className="text-[11px] text-[#8B949E]">Issue Ratio</span>
+                      <span className="text-[13px] font-medium text-[#C9D1D9]">{formatNumber(selectedRepo.open_issues)} Open</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[13px] font-bold text-[#3FB950]">Healthy</span>
+                      <span className="block text-[10px] text-[#8B949E]">Resolution Rate</span>
+                    </div>
+                  </div>
+                </div>     
 
-              <div className="space-y-3 pt-4 border-t border-[#30363D]">
+                 <div className="space-y-3 pt-4 border-t border-[#30363D]">
                 {selectedRepo.homepage && (
                   <a 
                     href={selectedRepo.homepage.startsWith('http') ? selectedRepo.homepage : `https://${selectedRepo.homepage}`}
@@ -440,34 +454,7 @@ export default function App() {
                   <Book className="w-4 h-4" />
                   View on GitHub
                 </a>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Project Velocity</h3>
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="flex justify-between items-center p-3 border border-[#30363D] bg-[#0D1117]/50 rounded-lg">
-                    <div className="flex flex-col">
-                      <span className="text-[11px] text-[#8B949E]">Issue Ratio</span>
-                      <span className="text-[13px] font-medium text-[#C9D1D9]">{formatNumber(selectedRepo.open_issues)} Open</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[13px] font-bold text-[#3FB950]">Healthy</span>
-                      <span className="block text-[10px] text-[#8B949E]">Resolution Rate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <a 
-                  href={`https://github.com/${selectedRepo.organization}/${selectedRepo.repo_name}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 w-full bg-[#238636] hover:bg-[#2ea043] text-white text-sm font-medium py-2.5 px-4 rounded-md transition-colors border border-[rgba(240,246,252,0.1)]"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  View on GitHub
-                </a>
+              </div>                
               </div>
             </div>
           </aside>
