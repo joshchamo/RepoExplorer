@@ -257,14 +257,14 @@ export default function App() {
             </div>
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
+              <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[300px]">Repository</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider">Description</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px]">Language</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Stars</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Forks</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-full">Description</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Language</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Stars</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Forks</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#30363D]">
@@ -274,26 +274,32 @@ export default function App() {
                       onClick={() => setSelectedRepo(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
-                      <td className="px-4 py-3 overflow-hidden">
-                        <div className="flex items-center gap-2 truncate">
+                     <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate block">
+                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline">
                             {repo.organization}/{repo.repo_name}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 overflow-hidden">
+                      <td className="px-4 py-3 w-full max-w-[100px]">
                         <p className="text-[#8B949E] text-sm truncate">
                           {repo.description}
                         </p>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {repo.language && (
                           <div className="flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8B949E' }} />
                             <span className="text-sm text-[#C9D1D9]">{repo.language}</span>
                           </div>
                         )}
+                      </td>
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
+                      </td>
+                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                        <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
                       </td>
                       <td className="px-4 py-3 text-right">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
