@@ -301,12 +301,6 @@ export default function App() {
                       <td className="px-4 py-3 text-right whitespace-nowrap">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
                       </td>
-                      <td className="px-4 py-3 text-right">
-                        <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
