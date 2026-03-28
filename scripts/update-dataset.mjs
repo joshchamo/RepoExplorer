@@ -55,7 +55,11 @@ async function fetchTopRepos() {
     'description', 
     'has_coc', 
     'has_contributing', 
-    'has_workflows'
+    'has_workflows',
+    'homepage',
+    'topics',
+    'license',
+    'last_updated'
   ];
 
   // Helper function to safely escape strings for CSV format
@@ -70,6 +74,7 @@ async function fetchTopRepos() {
   allRepos.forEach(repo => {
     // Calculate repo age in days
     const ageDays = Math.floor((new Date() - new Date(repo.created_at)) / (1000 * 60 * 60 * 24));
+    const lastUpdatedDays = Math.floor((new Date() - new Date(repo.pushed_at)) / (1000 * 60 * 60 * 24));
     
     const row = [
       escapeCSV(repo.owner.login),
@@ -80,11 +85,13 @@ async function fetchTopRepos() {
       repo.open_issues_count,
       ageDays,
       escapeCSV(repo.description),
-      // The search API doesn't return deep metadata like Code of Conduct, 
-      // so we use proxy boolean flags available in the search payload to populate the UI
       repo.has_issues ? 'true' : 'false',
       repo.has_projects ? 'true' : 'false',
-      repo.has_downloads ? 'true' : 'false'
+      repo.has_downloads ? 'true' : 'false',
+      escapeCSV(repo.homepage),
+      escapeCSV((repo.topics || []).join('|')), // Join topics with a pipe character
+      escapeCSV(repo.license ? repo.license.name : 'No License'),
+      lastUpdatedDays
     ];
     
     csvRows.push(row.join(','));
