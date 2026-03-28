@@ -1,0 +1,20 @@
+repo_name,organization,language,stars,forks,open_issues,age_days,has_coc,has_contributing,has_workflows,has_readme,description
+build-your-own-x,codecrafters-io,Markdown,465892,43725,474,2838,False,False,False,True,Master programming by recreating your favorite technologies from scratch.
+awesome,sindresorhus,,437387,33176,72,4236,False,True,True,True,😎 Awesome lists about all kinds of interesting topics
+freeCodeCamp,freeCodeCamp,TypeScript,437065,43374,323,4069,False,False,True,True,"freeCodeCamp.org's open-source codebase and curriculum. Learn math, programming, and computer science for free."
+public-apis,public-apis,Python,398362,42615,843,3617,False,True,True,True,A collective list of free APIs
+free-programming-books,EbookFoundation,Python,382530,65905,72,4509,False,False,True,True,📚 Freely available programming books
+developer-roadmap,kamranahmedse,TypeScript,349025,43697,32,3258,True,True,True,True,"Interactive roadmaps, guides and other educational content to help developers grow in their careers."
+coding-interview-university,jwasham,,336976,81644,95,3540,False,False,True,True,A complete computer science study plan to become a software engineer.
+system-design-primer,donnemartin,Python,335320,54413,524,3275,False,True,True,True,Learn how to design large-scale systems. Prep for the system design interview. Includes Anki flashcards.
+awesome-python,vinta,Python,282802,27205,17,4249,False,True,True,True,"An opinionated list of awesome Python frameworks, libraries, software and resources."
+996.ICU,996icu,,275463,20964,16698,2517,False,False,False,True,Repo for counting stars and contributing. Press F to pay respect to glorious developers.
+react,facebook,JavaScript,242990,50574,1115,4649,True,True,True,True,The library for web and native user interfaces.
+linux,torvalds,C,217354,60435,3,5276,False,False,False,True,Linux kernel source tree
+vue,vuejs,TypeScript,209882,33880,622,4583,False,False,True,True,"This is the repo for Vue 2. For Vue 3, go to https://github.com/vuejs/core"
+tensorflow,tensorflow,C++,193706,75228,3550,3752,True,True,True,True,An Open Source Machine Learning Framework for Everyone
+vscode,microsoft,TypeScript,181684,37936,13869,3816,False,True,True,True,Visual Studio Code
+flutter,flutter,Dart,175189,29981,12448,3997,True,True,True,True,Flutter makes it easy and fast to build beautiful apps for mobile and beyond
+bootstrap,twbs,MDX,173966,79114,577,5313,True,False,True,True,"The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web."
+go,golang,Go,132468,18820,9839,4197,False,True,True,True,The Go programming language
+kubernetes,kubernetes,Go,120491,42460,2634,4270,False,True,True,True,Production-Grade Container Scheduling and Management
