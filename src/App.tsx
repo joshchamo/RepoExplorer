@@ -69,6 +69,26 @@ export default function App() {
     loadData();
   }, []);
 
+  const VersionControlIcon = ({ className }: { className?: string }) => (
+  <svg 
+    viewBox="0 0 100 100" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="8" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="50" cy="14" r="10" />
+    <line x1="50" y1="24" x2="50" y2="76" />
+    <circle cx="50" cy="86" r="10" />
+    <path d="M 50 38 L 22 52 L 22 62" />
+    <circle cx="22" cy="72" r="10" />
+    <path d="M 50 62 L 78 48 L 78 38" />
+    <circle cx="78" cy="28" r="10" />
+  </svg>
+  );
+
   const filteredAndSortedData = useMemo(() => {
     let filtered = data;
     
@@ -114,15 +134,24 @@ export default function App() {
     return `${(days / 365).toFixed(1)}y`;
   };
 
+  const resetApp = () => {
+    setSearchQuery('');
+    setSortOption('stars');
+    setSelectedRepo(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-[#0D1117] text-[#C9D1D9] font-sans selection:bg-[#3d93f5]/30 flex flex-col">
       {/* Top Navigation */}
       <header className="sticky top-0 z-20 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#30363D] bg-[#161B22] px-6 lg:px-10 py-4 gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-white">
-            <Book className="w-5 h-5 text-[#3d93f5]" />
+          <button 
+            onClick={resetApp}
+            className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity cursor-pointer text-left">
+            <VersionControlIcon className="w-6 h-6 text-[#3d93f5]" />
             <h1 className="text-lg font-bold tracking-tight">RepoExplorer</h1>
-          </div>
+          </button>
         </div>
 
         <div className="flex-1 max-w-xl w-full">
