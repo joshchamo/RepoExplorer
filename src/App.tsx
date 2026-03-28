@@ -260,7 +260,7 @@ export default function App() {
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider max-w-[350px]">Repository</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-full">Description</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Language</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Stars</th>
@@ -274,10 +274,10 @@ export default function App() {
                       onClick={() => setSelectedRepo(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
-                     <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
+                     <td className="px-4 py-3 max-w-[350px]">
+                        <div className="flex items-center gap-2 min-w-0">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline">
+                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate">
                             {repo.organization}/{repo.repo_name}
                           </span>
                         </div>
