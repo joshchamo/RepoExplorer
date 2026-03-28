@@ -258,13 +258,13 @@ export default function App() {
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
-                <thead className="bg-[#161B22] border-b border-[#30363D]">
+               <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[220px]">Repository</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[220px]">Description</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider">Description</th>
                     <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px]">Language</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px] text-right">Stars</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[120px] text-right">Forks</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Stars</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[100px] text-right">Forks</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#30363D]">
@@ -274,19 +274,19 @@ export default function App() {
                       onClick={() => setSelectedRepo(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <Book className="w-4 h-4 text-[#8B949E]" />
-                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate block w-full">
-                            {repo.organization}/{repo.repo_name}
+                      <td className="px-4 py-3 overflow-hidden">
+                        <div className="flex items-center gap-2 truncate">
+                          <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
+                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate block">
+                          {repo.organization}/{repo.repo_name}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3">
-                        <p className="text-[#8B949E] text-sm truncate max-w-[400px]">
+                      <td className="px-4 py-3 overflow-hidden">
+                        <p className="text-[#8B949E] text-sm truncate">
                           {repo.description}
                         </p>
-                      </td>
+                      </td>  
                       <td className="px-4 py-3">
                         {repo.language && (
                           <div className="flex items-center gap-1.5">
