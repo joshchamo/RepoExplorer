@@ -33,6 +33,26 @@ const LANGUAGE_COLORS: Record<string, string> = {
   Markdown: '#083fa1',
 };
 
+const VersionControlIcon = ({ className }: { className?: string }) => (
+  <svg 
+    viewBox="0 0 100 100" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="8" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <circle cx="50" cy="14" r="10" />
+    <line x1="50" y1="24" x2="50" y2="76" />
+    <circle cx="50" cy="86" r="10" />
+    <path d="M 50 38 L 22 52 L 22 62" />
+    <circle cx="22" cy="72" r="10" />
+    <path d="M 50 62 L 78 48 L 78 38" />
+    <circle cx="78" cy="28" r="10" />
+  </svg>
+);
+
 export default function App() {
   const [data, setData] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,17 +61,36 @@ export default function App() {
   const [sortOption, setSortOption] = useState<SortOption>('stars');
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [showAbout, setShowAbout] = useState(false);
-  
   const [readmeContent, setReadmeContent] = useState<string | null>(null);
   const [readmeLoading, setReadmeLoading] = useState(false);
-  const [readmeError, setReadmeError] = useState(false);
+  const [readmeError, setReadmeError] = useState<string | null>(null);
 
-  // Reset README state when a new repo is selected
   useEffect(() => {
     setReadmeContent(null);
+    setReadmeError(null);
     setReadmeLoading(false);
-    setReadmeError(false);
   }, [selectedRepo]);
+
+  const fetchReadme = async (repo: Repo) => {
+    setReadmeLoading(true);
+    setReadmeError(null);
+    try {
+      let res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/main/README.md`);
+      if (!res.ok) {
+        res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/master/README.md`);
+      }
+      if (!res.ok) {
+        throw new Error('README not found');
+      }
+      const text = await res.text();
+      const cleanedText = text.replace(/!\[.*?\]\(.*?\)/g, '').replace(/<[^>]*>?/gm, '');
+      setReadmeContent(cleanedText.slice(0, 500) + (cleanedText.length > 500 ? '...' : ''));
+    } catch (err) {
+      setReadmeError('Could not load README snippet.');
+    } finally {
+      setReadmeLoading(false);
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -81,26 +120,6 @@ export default function App() {
     loadData();
   }, []);
 
-  const VersionControlIcon = ({ className }: { className?: string }) => (
-  <svg 
-    viewBox="0 0 100 100" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="8" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <circle cx="50" cy="14" r="10" />
-    <line x1="50" y1="24" x2="50" y2="76" />
-    <circle cx="50" cy="86" r="10" />
-    <path d="M 50 38 L 22 52 L 22 62" />
-    <circle cx="22" cy="72" r="10" />
-    <path d="M 50 62 L 78 48 L 78 38" />
-    <circle cx="78" cy="28" r="10" />
-  </svg>
-  );
-
   const filteredAndSortedData = useMemo(() => {
     let filtered = data;
     
@@ -113,7 +132,6 @@ export default function App() {
           return repo.language ? String(repo.language).toLowerCase().includes(lang) : false;
         }
         
-        // FIX: Safely convert everything to a string first so numbers don't crash the app
         const nameMatch = String(repo.repo_name || '').toLowerCase().includes(query);
         const descMatch = String(repo.description || '').toLowerCase().includes(query);
         const langMatch = String(repo.language || '').toLowerCase().includes(query);
@@ -153,42 +171,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const fetchReadme = async () => {
-    if (!selectedRepo) return;
-    setReadmeLoading(true);
-    setReadmeError(false);
-    
-    const { organization, repo_name } = selectedRepo;
-    const branches = ['main', 'master']; // Try main first, fallback to master
-    let content = null;
-
-    for (const branch of branches) {
-      try {
-        const res = await fetch(`https://raw.githubusercontent.com/${organization}/${repo_name}/${branch}/README.md`);
-        if (res.ok) {
-          content = await res.text();
-          break;
-        }
-      } catch (e) {
-        // Ignore and try the next branch
-      }
-    }
-
-    if (content) {
-      // Strip out images and basic HTML to make the snippet cleaner
-      const cleanText = content
-        .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
-        .replace(/<[^>]*>?/gm, '')       // remove HTML tags
-        .trim();
-      
-      const snippet = cleanText.substring(0, 500) + (cleanText.length > 500 ? '...' : '');
-      setReadmeContent(snippet);
-    } else {
-      setReadmeError(true);
-    }
-    setReadmeLoading(false);
-  };
-
   return (
     <div className="min-h-screen bg-[#0D1117] text-[#C9D1D9] font-sans selection:bg-[#3d93f5]/30 flex flex-col">
       {/* Top Navigation */}
@@ -196,7 +178,8 @@ export default function App() {
         <div className="flex items-center gap-4">
           <button 
             onClick={resetApp}
-            className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity cursor-pointer text-left">
+            className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity cursor-pointer text-left"
+          >
             <VersionControlIcon className="w-6 h-6 text-[#3d93f5]" />
             <h1 className="text-lg font-bold tracking-tight">RepoExplorer</h1>
           </button>
@@ -263,7 +246,7 @@ export default function App() {
       <main className="flex-1 p-6 lg:p-8 overflow-y-auto relative">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-white">Explore the top 1000 most-starred public repositories on GitHub</h2>
+            <h2 className="text-xl font-semibold text-white">Top Repositories</h2>
             <div className="text-sm text-[#8B949E] font-mono">
               Showing {filteredAndSortedData.length} results
             </div>
@@ -282,8 +265,8 @@ export default function App() {
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                      <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate">
-                        {repo.organization}/{repo.repo_name}
+                      <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
+                        {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                       </h3>
                     </div>
                     <p className="text-[13px] text-[#C9D1D9] line-clamp-3 leading-relaxed mb-3">
@@ -315,14 +298,14 @@ export default function App() {
             </div>
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[800px]">
+              <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider max-w-[350px]">Repository</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-full">Description</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Language</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Stars</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Forks</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[35%]">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[40%]">Description</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[10%]">Language</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[7.5%] text-right">Stars</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[7.5%] text-right">Forks</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#30363D]">
@@ -332,20 +315,20 @@ export default function App() {
                       onClick={() => setSelectedRepo(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
-                     <td className="px-4 py-3 max-w-[350px]">
-                        <div className="flex items-center gap-2 min-w-0">
+                      <td className="px-4 py-3 overflow-hidden">
+                        <div className="flex items-center gap-2 truncate">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate">
-                            {repo.organization}/{repo.repo_name}
+                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
+                            {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 w-full max-w-[100px]">
-                        <p className="text-[#8B949E] text-sm truncate">
+                      <td className="px-4 py-3 overflow-hidden">
+                        <p className="text-[#8B949E] text-sm line-clamp-2" title={repo.description}>
                           {repo.description}
                         </p>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-4 py-3 overflow-hidden">
                         {repo.language && (
                           <div className="flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8B949E' }} />
@@ -353,10 +336,10 @@ export default function App() {
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-right overflow-hidden">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
                       </td>
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-right overflow-hidden">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
                       </td>
                     </tr>
@@ -412,47 +395,11 @@ export default function App() {
                   </span>
                   <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
                     <GitFork className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.forks)}</span>
+                  </span>
                   <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
                     <CircleDot className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.open_issues)}</span>
                   </span>
                 </div>
-              </div>
-
-              {/* README Snippet Section */}
-              <div className="border-t border-[#30363D] pt-4">
-                <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">README Snippet</h3>
-                
-                {!readmeContent && !readmeLoading && !readmeError && (
-                  <button 
-                    onClick={fetchReadme}
-                    className="flex items-center gap-2 text-sm text-[#3d93f5] hover:text-[#58a6ff] transition-colors bg-[#3d93f5]/10 hover:bg-[#3d93f5]/20 px-3 py-2 rounded-md border border-[#3d93f5]/20 w-full justify-center"
-                  >
-                    <Book className="w-4 h-4" />
-                    Load README Snippet
-                  </button>
-                )}
-
-                {readmeLoading && (
-                  <div className="text-sm text-[#8B949E] flex items-center justify-center py-4">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#3d93f5] mr-2"></div>
-                    Fetching README...
-                  </div>
-                )}
-
-                {readmeError && (
-                  <div className="text-sm text-[#f85149] bg-[#f85149]/10 p-3 rounded-md border border-[#f85149]/20">
-                    Could not load README. It might not exist or uses a non-standard branch name.
-                  </div>
-                )}
-
-                {readmeContent && (
-                  <div className="bg-[#0D1117] border border-[#30363D] rounded-md p-4 relative">
-                    <p className="text-[#C9D1D9] whitespace-pre-wrap font-mono text-[12px] leading-relaxed">
-                      {readmeContent}
-                    </p>
-                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0D1117] to-transparent rounded-b-md pointer-events-none"></div>
-                  </div>
-                )}
               </div>
 
               {selectedRepo.language && (
@@ -511,6 +458,7 @@ export default function App() {
                   </span>
                 </div>
               </div>
+
               <div className="space-y-3 pt-2">
                 <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Project Velocity</h3>
                 <div className="grid grid-cols-1 gap-3">
@@ -524,11 +472,38 @@ export default function App() {
                       <span className="block text-[10px] text-[#8B949E]">Resolution Rate</span>
                     </div>
                   </div>
-                </div>     
+                </div>
+              </div>
 
-                 <div className="space-y-3 pt-4 border-t border-[#30363D]">
+              <div className="space-y-3 pt-4 border-t border-[#30363D]">
+                <h3 className="text-xs font-semibold text-white uppercase tracking-wider">README Snippet</h3>
+                {!readmeContent && !readmeLoading && !readmeError && (
+                  <button
+                    onClick={() => fetchReadme(selectedRepo)}
+                    className="w-full bg-[#21262D] hover:bg-[#30363D] text-[#C9D1D9] text-sm font-medium py-2 px-4 rounded-md transition-colors border border-[#30363D]"
+                  >
+                    Load README Snippet
+                  </button>
+                )}
+                {readmeLoading && (
+                  <div className="text-sm text-[#8B949E] text-center py-2">Loading snippet...</div>
+                )}
+                {readmeError && (
+                  <div className="text-sm text-[#F85149] text-center py-2">{readmeError}</div>
+                )}
+                {readmeContent && (
+                  <div className="relative bg-[#0D1117] border border-[#30363D] rounded-lg p-4">
+                    <p className="text-sm text-[#C9D1D9] whitespace-pre-wrap font-mono text-[12px] leading-relaxed">
+                      {readmeContent}
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0D1117] to-transparent rounded-b-lg"></div>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3 pt-4 border-t border-[#30363D]">
                 {selectedRepo.homepage && (
-                  <a 
+                  <a
                     href={selectedRepo.homepage.startsWith('http') ? selectedRepo.homepage : `https://${selectedRepo.homepage}`}
                     target="_blank"
                     rel="noreferrer"
@@ -537,7 +512,7 @@ export default function App() {
                     Visit Website
                   </a>
                 )}
-                <a 
+                <a
                   href={`https://github.com/${selectedRepo.organization}/${selectedRepo.repo_name}`}
                   target="_blank"
                   rel="noreferrer"
@@ -545,7 +520,6 @@ export default function App() {
                   <Book className="w-4 h-4" />
                   View on GitHub
                 </a>
-              </div>                
               </div>
             </div>
           </aside>
