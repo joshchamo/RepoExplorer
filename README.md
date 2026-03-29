@@ -1,10 +1,17 @@
-RepoExplorer is a responsive, interactive dashboard designed to help developers explore, search, and analyze the top 1000 most-starred public repositories on GitHub. 
+# RepoExplorer
 
+RepoExplorer is a responsive, interactive dashboard for exploring, searching, and analyzing the top 1000 most-starred public repositories on GitHub.
+
+🔗 Live Demo: https://repo-explorer-nu.vercel.app/
+
+Built as a project to explore data pipelines, UI state management, and automated data refresh workflows.
+
+---
 ## 📊 Data Source & Automation
 
-This project's UI was initially designed around the excellent Kaggle dataset, [The Top-1000 GitHub Repositories](https://www.kaggle.com/datasets/felkan228/metadata-of-the-top-1000-github-repositories), which provides structured information on the 1000 most‑starred public repositories on GitHub.
+This project's UI was initially designed around the Kaggle dataset, [The Top-1000 GitHub Repositories](https://www.kaggle.com/datasets/felkan228/metadata-of-the-top-1000-github-repositories), which provides structured information on the 1000 most‑starred public repositories on GitHub.
 
-To keep the data fresh and relevant, the project has since evolved into an automated system. We now use **GitHub Actions** to run a new query every week, automatically fetching the latest top-starred repositories and updating the underlying dataset. This ensures the dashboard always reflects the current state of the open-source ecosystem.
+To keep the data current, the project evolved into an automated pipeline. A GitHub Actions workflow runs weekly, fetching updated data from the GitHub API and regenerating the dataset. This ensures the dashboard reflects the latest state of the open-source ecosystem.
 
 ## ✨ Features
 
