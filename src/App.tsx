@@ -83,8 +83,19 @@ export default function App() {
         throw new Error('README not found');
       }
       const text = await res.text();
-      const cleanedText = text.replace(/!\[.*?\]\(.*?\)/g, '').replace(/<[^>]*>?/gm, '');
-      setReadmeContent(cleanedText.slice(0, 500) + (cleanedText.length > 500 ? '...' : ''));
+      
+      const cleanedText = text
+        .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
+        .replace(/<[^>]*>?/gm, '') // Remove HTML tags
+        .replace(/!\[.*?\]\(.*?\)/g, '') // Remove markdown images
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // Convert links to just text (removes empty badge links)
+        .replace(/^[#=*-]+\s+/gm, '') // Remove headers and list markers
+        .replace(/[*_]{1,2}/g, '') // Remove bold/italic markers
+        .replace(/`/g, '') // Remove backticks
+        .replace(/\n\s*\n/g, '\n\n') // Normalize newlines
+        .trim();
+        
+      setReadmeContent(cleanedText.slice(0, 800) + (cleanedText.length > 800 ? '...' : ''));
     } catch (err) {
       setReadmeError('Could not load README snippet.');
     } finally {
@@ -608,3 +619,4 @@ export default function App() {
     </div>
   );
 }
+
