@@ -11,7 +11,7 @@ To keep the data fresh and relevant, the project has since evolved into an autom
 * **Rich Data Display:** View comprehensive details for each repository, including language, star count, forks, open issues, age, license, topics/tags, and workflow status.
 * **Quick Look Panel:** Click on any repository to slide out a detailed side panel with extended metadata, project velocity metrics, and direct links to the repository and homepage.
 * **Flexible Layouts:** Toggle seamlessly between a dense, data-rich **List View** and a highly visual **Grid View** (Cards).
-* **Advanced Searching:** Instantly filter repositories by name, description, or language. You can even use specific prefixes like `lang:rust` or `lang:python`.
+* **Advanced Searching:** Instantly filter repositories by name, description, or language. You can even use specific prefixes like `lang:rust` or `python`.
 * **Dynamic Sorting:** Sort the top 1000 repositories by Stars, Forks, Open Issues, or Age.
 * **Fully Responsive:** Carefully crafted with Tailwind CSS to provide a perfect viewing experience on mobile, tablet, and ultra-wide desktop displays.
 
@@ -30,7 +30,7 @@ To run this project on your local machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/repo-explorer.git
+   git clone https://github.com/joshchamo/repo-explorer.git
    cd repo-explorer
    ```
 
