@@ -110,6 +110,14 @@ export default function App() {
         .replace(/^[#=*\->]+\s+/gm, '') // Remove headers, list markers, and blockquotes
         .replace(/[*_]{1,2}/g, '') // Remove bold/italic markers
         .replace(/`/g, '') // Remove backticks
+        .replace(/\|/g, '') // Remove markdown table pipes
+        .replace(/&lt;/g, '<') // Decode HTML entities
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'")
+        .replace(/&middot;/g, '·')
+        .replace(/&#x200B;/g, '')
         .replace(/\n\s*\n/g, '\n\n') // Normalize newlines
         .trim();
         
