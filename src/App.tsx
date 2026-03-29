@@ -216,7 +216,7 @@ export default function App() {
       <main className="flex-1 p-6 lg:p-8 overflow-y-auto relative">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-white">Top Repositories</h2>
+            <h2 className="text-xl font-semibold text-white">Explore the top 1000 most-starred public repositories on GitHub</h2>
             <div className="text-sm text-[#8B949E] font-mono">
               Showing {filteredAndSortedData.length} results
             </div>
