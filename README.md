@@ -46,9 +46,6 @@ To run this project on your local machine:
 
 4. Open your browser and navigate to `http://localhost:3000` (or the port provided by Vite).
 
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/joshchamo/repo-explorer/issues) if you want to contribute.
 
 ## 📝 License
 
