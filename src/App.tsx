@@ -41,6 +41,17 @@ export default function App() {
   const [sortOption, setSortOption] = useState<SortOption>('stars');
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [showAbout, setShowAbout] = useState(false);
+  
+  const [readmeContent, setReadmeContent] = useState<string | null>(null);
+  const [readmeLoading, setReadmeLoading] = useState(false);
+  const [readmeError, setReadmeError] = useState(false);
+
+  // Reset README state when a new repo is selected
+  useEffect(() => {
+    setReadmeContent(null);
+    setReadmeLoading(false);
+    setReadmeError(false);
+  }, [selectedRepo]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -140,6 +151,42 @@ export default function App() {
     setSortOption('stars');
     setSelectedRepo(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const fetchReadme = async () => {
+    if (!selectedRepo) return;
+    setReadmeLoading(true);
+    setReadmeError(false);
+    
+    const { organization, repo_name } = selectedRepo;
+    const branches = ['main', 'master']; // Try main first, fallback to master
+    let content = null;
+
+    for (const branch of branches) {
+      try {
+        const res = await fetch(`https://raw.githubusercontent.com/${organization}/${repo_name}/${branch}/README.md`);
+        if (res.ok) {
+          content = await res.text();
+          break;
+        }
+      } catch (e) {
+        // Ignore and try the next branch
+      }
+    }
+
+    if (content) {
+      // Strip out images and basic HTML to make the snippet cleaner
+      const cleanText = content
+        .replace(/!\[.*?\]\(.*?\)/g, '') // remove images
+        .replace(/<[^>]*>?/gm, '')       // remove HTML tags
+        .trim();
+      
+      const snippet = cleanText.substring(0, 500) + (cleanText.length > 500 ? '...' : '');
+      setReadmeContent(snippet);
+    } else {
+      setReadmeError(true);
+    }
+    setReadmeLoading(false);
   };
 
   return (
@@ -365,11 +412,47 @@ export default function App() {
                   </span>
                   <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
                     <GitFork className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.forks)}</span>
-                  </span>
                   <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
                     <CircleDot className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.open_issues)}</span>
                   </span>
                 </div>
+              </div>
+
+              {/* README Snippet Section */}
+              <div className="border-t border-[#30363D] pt-4">
+                <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">README Snippet</h3>
+                
+                {!readmeContent && !readmeLoading && !readmeError && (
+                  <button 
+                    onClick={fetchReadme}
+                    className="flex items-center gap-2 text-sm text-[#3d93f5] hover:text-[#58a6ff] transition-colors bg-[#3d93f5]/10 hover:bg-[#3d93f5]/20 px-3 py-2 rounded-md border border-[#3d93f5]/20 w-full justify-center"
+                  >
+                    <Book className="w-4 h-4" />
+                    Load README Snippet
+                  </button>
+                )}
+
+                {readmeLoading && (
+                  <div className="text-sm text-[#8B949E] flex items-center justify-center py-4">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#3d93f5] mr-2"></div>
+                    Fetching README...
+                  </div>
+                )}
+
+                {readmeError && (
+                  <div className="text-sm text-[#f85149] bg-[#f85149]/10 p-3 rounded-md border border-[#f85149]/20">
+                    Could not load README. It might not exist or uses a non-standard branch name.
+                  </div>
+                )}
+
+                {readmeContent && (
+                  <div className="bg-[#0D1117] border border-[#30363D] rounded-md p-4 relative">
+                    <p className="text-[#C9D1D9] whitespace-pre-wrap font-mono text-[12px] leading-relaxed">
+                      {readmeContent}
+                    </p>
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0D1117] to-transparent rounded-b-md pointer-events-none"></div>
+                  </div>
+                )}
               </div>
 
               {selectedRepo.language && (
