@@ -224,8 +224,8 @@ export default function App() {
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                      <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate">
-                        {repo.organization}/{repo.repo_name}
+                      <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
+                        {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                       </h3>
                     </div>
                     <p className="text-[13px] text-[#C9D1D9] line-clamp-3 leading-relaxed mb-3">
@@ -257,14 +257,14 @@ export default function App() {
             </div>
           ) : (
             <div className="border border-[#30363D] rounded-lg bg-[#161B22] overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[800px]">
+              <table className="w-full text-left border-collapse min-w-[800px] table-fixed">
                 <thead className="bg-[#161B22] border-b border-[#30363D]">
                   <tr>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider max-w-[350px]">Repository</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-full">Description</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap">Language</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Stars</th>
-                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider whitespace-nowrap text-right">Forks</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[35%]">Repository</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[40%]">Description</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[10%]">Language</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[7.5%] text-right">Stars</th>
+                    <th className="px-4 py-3 text-[#8B949E] text-xs font-semibold uppercase tracking-wider w-[7.5%] text-right">Forks</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#30363D]">
@@ -274,20 +274,20 @@ export default function App() {
                       onClick={() => setSelectedRepo(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
-                     <td className="px-4 py-3 max-w-[350px]">
-                        <div className="flex items-center gap-2 min-w-0">
+                     <td className="px-4 py-3 overflow-hidden">
+                        <div className="flex items-center gap-2 truncate">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
-                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate">
-                            {repo.organization}/{repo.repo_name}
+                          <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
+                            {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 w-full max-w-[100px]">
-                        <p className="text-[#8B949E] text-sm truncate">
+                      <td className="px-4 py-3 overflow-hidden">
+                        <p className="text-[#8B949E] text-sm line-clamp-2" title={repo.description}>
                           {repo.description}
                         </p>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-4 py-3 overflow-hidden">
                         {repo.language && (
                           <div className="flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LANGUAGE_COLORS[repo.language] || '#8B949E' }} />
@@ -295,10 +295,10 @@ export default function App() {
                           </div>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-right overflow-hidden">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
                       </td>
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <td className="px-4 py-3 text-right overflow-hidden">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
                       </td>
                     </tr>
