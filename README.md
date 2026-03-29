@@ -48,7 +48,7 @@ To run this project on your local machine:
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/your-username/repo-explorer/issues) if you want to contribute.
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/joshchamo/repo-explorer/issues) if you want to contribute.
 
 ## 📝 License
 
