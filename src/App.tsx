@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Papa from 'papaparse';
-import { Search, Grid, List, ChevronDown, Book, Star, GitFork, CircleDot, Clock, Shield, CheckCircle, X, ExternalLink, Activity } from 'lucide-react';
+import { Search, Grid, List, ChevronDown, Book, Star, GitFork, CircleDot, Clock, Shield, CheckCircle, X, ExternalLink, Activity, Info } from 'lucide-react';
 import { Repo, fallbackData } from './data';
 import { cn } from './lib/utils';
 
@@ -40,6 +40,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('stars');
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -168,6 +169,16 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => setShowAbout(true)}
+            className="flex items-center gap-1.5 text-sm font-medium text-[#8B949E] hover:text-white transition-colors px-2 py-1.5 rounded-md hover:bg-[#30363D]/50"
+          >
+            <Info className="w-4 h-4" />
+            <span className="hidden sm:inline">About</span>
+          </button>
+          
+          <div className="w-px h-5 bg-[#30363D] hidden sm:block"></div>
+
           <div className="flex items-center gap-2 text-sm text-[#8B949E]">
             <span>Sort:</span>
             <select 
@@ -455,6 +466,74 @@ export default function App() {
               </div>
             </div>
           </aside>
+        </>
+      )}
+
+      {/* About Modal */}
+      {showAbout && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
+            onClick={() => setShowAbout(false)}
+          />
+          <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-[#161B22] border border-[#30363D] shadow-2xl z-50 rounded-xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+            <header className="flex items-center justify-between px-6 py-4 border-b border-[#30363D] shrink-0">
+              <div className="flex items-center gap-2">
+                <Info className="w-5 h-5 text-[#3d93f5]" />
+                <h2 className="text-lg font-semibold text-white">About RepoExplorer</h2>
+              </div>
+              <button
+                onClick={() => setShowAbout(false)}
+                className="text-[#8B949E] hover:text-white p-1.5 rounded-md hover:bg-[#30363D]/50 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </header>
+            <div className="p-6 overflow-y-auto space-y-6 text-[#C9D1D9] text-sm leading-relaxed">
+              <div className="space-y-4">
+                <p>
+                  <strong>RepoExplorer</strong> is a responsive, interactive dashboard for exploring, searching, and analyzing the top 1000 most-starred public repositories on GitHub.
+                </p>
+                <p>
+                  Built as a project to explore data pipelines, UI state management, and automated data refresh workflows.
+                </p>
+
+                <h3 className="text-white font-semibold text-base mt-6 flex items-center gap-2">
+                  <span>📊</span> Data Source & Automation
+                </h3>
+                <p>
+                  This project's UI was initially designed around the Kaggle dataset, <em>The Top-1000 GitHub Repositories</em>, which provides structured information on the 1000 most‑starred public repositories on GitHub.
+                </p>
+                <p>
+                  To keep the data current, the project evolved into an automated pipeline. A GitHub Actions workflow runs weekly, fetching updated data from the GitHub API and regenerating the dataset. This ensures the dashboard reflects the latest state of the open-source ecosystem.
+                </p>
+
+                <h3 className="text-white font-semibold text-base mt-6 flex items-center gap-2">
+                  <span>✨</span> Features
+                </h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li><strong className="text-white">Rich Data Display:</strong> View comprehensive details for each repository, including language, star count, forks, open issues, age, license, topics/tags, and workflow status.</li>
+                  <li><strong className="text-white">Quick Look Panel:</strong> Click on any repository to slide out a detailed side panel with extended metadata, project velocity metrics, and direct links to the repository and homepage.</li>
+                  <li><strong className="text-white">Flexible Layouts:</strong> Toggle seamlessly between a dense, data-rich List View and a highly visual Grid View (Cards).</li>
+                  <li><strong className="text-white">Advanced Searching:</strong> Instantly filter repositories by name, description, or language. You can even use specific prefixes like <code className="bg-[#30363D] px-1.5 py-0.5 rounded text-[#3d93f5]">lang:rust</code> or <code className="bg-[#30363D] px-1.5 py-0.5 rounded text-[#3d93f5]">python</code>.</li>
+                  <li><strong className="text-white">Dynamic Sorting:</strong> Sort the top 1000 repositories by Stars, Forks, Open Issues, or Age.</li>
+                  <li><strong className="text-white">Fully Responsive:</strong> Carefully crafted with Tailwind CSS to provide a perfect viewing experience on mobile, tablet, and ultra-wide desktop displays.</li>
+                </ul>
+
+                <h3 className="text-white font-semibold text-base mt-6 flex items-center gap-2">
+                  <span>🛠️</span> Tech Stack
+                </h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li><strong className="text-white">Frontend Framework:</strong> React 18 with TypeScript</li>
+                  <li><strong className="text-white">Build Tool:</strong> Vite</li>
+                  <li><strong className="text-white">Styling:</strong> Tailwind CSS</li>
+                  <li><strong className="text-white">Icons:</strong> Lucide React</li>
+                  <li><strong className="text-white">Data Parsing:</strong> PapaParse (for client-side CSV processing)</li>
+                  <li><strong className="text-white">Automation:</strong> GitHub Actions (Weekly Cron Job)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>
