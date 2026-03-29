@@ -75,25 +75,47 @@ export default function App() {
     setReadmeLoading(true);
     setReadmeError(null);
     try {
-      let res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/main/README.md`);
-      if (!res.ok) {
-        res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/master/README.md`);
+      const pathsToTry = [
+        'main/README.md',
+        'master/README.md',
+        'main/readme.md',
+        'master/readme.md',
+        'main/Readme.md',
+        'master/Readme.md',
+        'main/README.MD',
+        'master/README.MD'
+      ];
+
+      let text = '';
+      let found = false;
+
+      for (const path of pathsToTry) {
+        const res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/${path}`);
+        if (res.ok) {
+          text = await res.text();
+          found = true;
+          break;
+        }
       }
-      if (!res.ok) {
+
+      if (!found) {
         throw new Error('README not found');
       }
-      const text = await res.text();
       
       const cleanedText = text
         .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
         .replace(/<[^>]*>?/gm, '') // Remove HTML tags
         .replace(/!\[.*?\]\(.*?\)/g, '') // Remove markdown images
         .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // Convert links to just text (removes empty badge links)
-        .replace(/^[#=*-]+\s+/gm, '') // Remove headers and list markers
+        .replace(/^[#=*\->]+\s+/gm, '') // Remove headers, list markers, and blockquotes
         .replace(/[*_]{1,2}/g, '') // Remove bold/italic markers
         .replace(/`/g, '') // Remove backticks
         .replace(/\n\s*\n/g, '\n\n') // Normalize newlines
         .trim();
+        
+      if (!cleanedText) {
+        throw new Error('README is empty or contains no readable text.');
+      }
         
       setReadmeContent(cleanedText.slice(0, 800) + (cleanedText.length > 800 ? '...' : ''));
     } catch (err) {
@@ -619,4 +641,3 @@ export default function App() {
     </div>
   );
 }
-
