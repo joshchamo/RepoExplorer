@@ -121,7 +121,7 @@ export default function App() {
   }, []);
 
   const filteredAndSortedData = useMemo(() => {
-    let filtered = data;
+    let filtered = [...data];
     
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -151,24 +151,36 @@ export default function App() {
     });
   }, [data, searchQuery, sortOption]);
 
-  const formatNumber = (num: number) => {
-    if (!num) return '0';
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
-    return num.toString();
+  const formatNumber = (num: number | string) => {
+    const n = Number(num);
+    if (!n || isNaN(n)) return '0';
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return n.toString();
   };
 
-  const formatAge = (days: number) => {
-    if (!days) return 'Unknown';
-    if (days < 365) return `${Math.floor(days / 30)}mo`;
-    return `${(days / 365).toFixed(1)}y`;
+  const formatAge = (days: number | string) => {
+    const d = Number(days);
+    if (!d || isNaN(d)) return 'Unknown';
+    if (d < 365) return `${Math.floor(d / 30)}mo`;
+    return `${(d / 365).toFixed(1)}y`;
   };
 
   const resetApp = () => {
     setSearchQuery('');
     setSortOption('stars');
     setSelectedRepo(null);
+    setReadmeContent(null);
+    setReadmeError(null);
+    setReadmeLoading(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleRepoSelect = (repo: Repo) => {
+    setSelectedRepo(repo);
+    setReadmeContent(null);
+    setReadmeError(null);
+    setReadmeLoading(false);
   };
 
   return (
@@ -259,14 +271,14 @@ export default function App() {
               {filteredAndSortedData.map((repo, i) => (
                 <article
                   key={i}
-                  onClick={() => setSelectedRepo(repo)}
+                  onClick={() => handleRepoSelect(repo)}
                   className="flex flex-col h-[200px] bg-[#161B22] border border-[#30363D] rounded-lg relative overflow-hidden group hover:border-[#8B949E] cursor-pointer transition-colors"
                 >
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                       <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
                       <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
-                        {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
+                        {String(repo.organization).toLowerCase() === String(repo.repo_name).toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                       </h3>
                     </div>
                     <p className="text-[13px] text-[#C9D1D9] line-clamp-3 leading-relaxed mb-3">
@@ -312,14 +324,14 @@ export default function App() {
                   {filteredAndSortedData.map((repo, i) => (
                     <tr 
                       key={i} 
-                      onClick={() => setSelectedRepo(repo)}
+                      onClick={() => handleRepoSelect(repo)}
                       className="hover:bg-[#1C2128] transition-colors cursor-pointer group"
                     >
                       <td className="px-4 py-3 overflow-hidden">
                         <div className="flex items-center gap-2 truncate">
                           <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
                           <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
-                            {repo.organization.toLowerCase() === repo.repo_name.toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
+                            {String(repo.organization).toLowerCase() === String(repo.repo_name).toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                           </span>
                         </div>
                       </td>
@@ -504,7 +516,7 @@ export default function App() {
               <div className="space-y-3 pt-4 border-t border-[#30363D]">
                 {selectedRepo.homepage && (
                   <a
-                    href={selectedRepo.homepage.startsWith('http') ? selectedRepo.homepage : `https://${selectedRepo.homepage}`}
+                    href={String(selectedRepo.homepage).startsWith('http') ? String(selectedRepo.homepage) : `https://${selectedRepo.homepage}`}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-[#30363D] hover:bg-[#3d93f5] text-white text-sm font-medium py-2.5 px-4 rounded-md transition-colors">
