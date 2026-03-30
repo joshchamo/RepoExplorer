@@ -103,9 +103,42 @@ export default function App() {
         throw new Error('README not found');
       }
       
-      const cleanedText = text
-        .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
-        .replace(/<[^>]*>?/gm, '') // Remove HTML tags
+      let cleanedText = text.replace(/<!--[\s\S]*?-->/g, ''); // Remove HTML comments
+      
+      // Remove <div align="center"> and <p align="center"> blocks (often used for logos/badges)
+      const removeBlock = (tagName: string) => {
+        const regex = new RegExp(`<${tagName}[^>]*align="center"[^>]*>`, 'i');
+        let match = cleanedText.match(regex);
+        let iterations = 0;
+        while (match && iterations < 10) { // prevent infinite loops
+          iterations++;
+          const startIndex = match.index!;
+          let depth = 1;
+          let i = startIndex + match[0].length;
+          
+          while (depth > 0 && i < cleanedText.length) {
+            if (cleanedText.substring(i, i + tagName.length + 1).toLowerCase() === `<${tagName}`) {
+              depth++;
+              i += tagName.length + 1;
+            } else if (cleanedText.substring(i, i + tagName.length + 2).toLowerCase() === `</${tagName}`) {
+              depth--;
+              i += tagName.length + 2;
+              while (i < cleanedText.length && cleanedText[i] !== '>') i++;
+              if (i < cleanedText.length && cleanedText[i] === '>') i++;
+            } else {
+              i++;
+            }
+          }
+          cleanedText = cleanedText.substring(0, startIndex) + cleanedText.substring(i);
+          match = cleanedText.match(regex);
+        }
+      };
+
+      removeBlock('div');
+      removeBlock('p');
+
+      cleanedText = cleanedText
+        .replace(/<[^>]*>?/gm, '') // Remove remaining HTML tags
         .replace(/!\[.*?\]\(.*?\)/g, '') // Remove markdown images
         .replace(/\[\]\([^)]*\)/g, '') // Remove empty markdown links
         .replace(/&lt;/g, '<') // Decode HTML entities
