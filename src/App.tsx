@@ -67,32 +67,56 @@ export default function App() {
     setReadmeLoading(true);
     setReadmeError(null);
     try {
-      const pathsToTry = [
+      const fetchPath = (path: string) => 
+        fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/${path}`)
+          .then(res => {
+            if (!res.ok) throw new Error('Not found');
+            return res.text();
+          });
+
+      const commonPaths = [
         'main/README.md',
         'master/README.md',
         'main/readme.md',
         'master/readme.md',
-        'main/Readme.md',
-        'master/Readme.md',
         'main/README.MD',
-        'master/README.MD',
-        'main/README',
-        'master/README',
-        'main/README.rst',
-        'master/README.rst',
-        'main/README.txt',
-        'master/README.txt'
+        'master/README.MD'
       ];
 
       let text = '';
       let found = false;
 
-      for (const path of pathsToTry) {
-        const res = await fetch(`https://raw.githubusercontent.com/${repo.organization}/${repo.repo_name}/${path}`);
-        if (res.ok) {
-          text = await res.text();
-          found = true;
-          break;
+      // Custom Promise.any implementation for older devices (like older iPads)
+      try {
+        text = await new Promise<string>((resolve, reject) => {
+          let errors = 0;
+          commonPaths.forEach(path => {
+            fetchPath(path).then(resolve).catch(() => {
+              errors++;
+              if (errors === commonPaths.length) reject(new Error('All common paths failed'));
+            });
+          });
+        });
+        found = true;
+      } catch (e) {
+        // Fallback to sequential for less common paths
+        const fallbackPaths = [
+          'main/README',
+          'master/README',
+          'main/README.rst',
+          'master/README.rst',
+          'main/README.txt',
+          'master/README.txt'
+        ];
+        
+        for (const path of fallbackPaths) {
+          try {
+            text = await fetchPath(path);
+            found = true;
+            break;
+          } catch (err) {
+            // continue
+          }
         }
       }
 
@@ -135,8 +159,8 @@ export default function App() {
       removeBlock('p');
 
       cleanedText = cleanedText
-        .replace(/<[^>]*>?/gm, '') // Remove remaining HTML tags
-        .replace(/!\[.*?\]\(.*?\)/g, '') // Remove markdown images
+        .replace(/<[^>]*>/gm, '') // Remove remaining HTML tags safely
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, '') // Remove markdown images safely
         .replace(/\[\]\([^)]*\)/g, '') // Remove empty markdown links
         .replace(/&lt;/g, '<') // Decode HTML entities
         .replace(/&gt;/g, '>')
