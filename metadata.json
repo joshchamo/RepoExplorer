@@ -1,5 +1,5 @@
 {
   "name": "RepoExplorer",
-  "description": "Explore, search, and analyze the top 1000 most-starred public repositories on GitHub.",
+  "description": "Explore the top 1000 most-starred GitHub repositories with a React dashboard, advanced search, and automated weekly updates via GitHub Actions.",
   "requestFramePermissions": []
 }
