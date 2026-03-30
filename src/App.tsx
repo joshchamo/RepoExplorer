@@ -84,7 +84,13 @@ export default function App() {
         'main/Readme.md',
         'master/Readme.md',
         'main/README.MD',
-        'master/README.MD'
+        'master/README.MD',
+        'main/README',
+        'master/README',
+        'main/README.rst',
+        'master/README.rst',
+        'main/README.txt',
+        'master/README.txt'
       ];
 
       let text = '';
