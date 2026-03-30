@@ -1,5 +1,5 @@
 {
   "name": "RepoExplorer",
-  "description": "",
+  "description": "Explore, search, and analyze the top 1000 most-starred public repositories on GitHub.",
   "requestFramePermissions": []
 }
