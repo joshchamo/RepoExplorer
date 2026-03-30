@@ -365,11 +365,14 @@ export default function App() {
                     </p>
                   </div>
                   
-                  <div className="h-10 border-t border-[#30363D] flex items-center px-4 bg-[#0D1117]/50 justify-between shrink-0">
+                  <div 
+                    className="h-10 border-t flex items-center px-4 bg-[#0D1117]/50 justify-between shrink-0"
+                    style={{ borderTopColor: repo.language ? (LANGUAGE_COLORS[repo.language] || '#30363D') : '#30363D' }}
+                  >
                     <div className="flex gap-4 items-center">
-                      <div className="flex items-center gap-1.5 text-[#8B949E]" title="Stars">
-                        <Star className="w-3.5 h-3.5" />
-                        <span className="font-mono text-[12px] text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
+                      <div className="flex items-center gap-1.5 text-[#e3b341]" title="Stars">
+                        <Star className="w-3.5 h-3.5 fill-current" />
+                        <span className="font-mono text-[12px] font-medium">{formatNumber(repo.stars)}</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-[#8B949E]" title="Forks">
                         <GitFork className="w-3.5 h-3.5" />
@@ -428,7 +431,10 @@ export default function App() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-right overflow-hidden">
-                        <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.stars)}</span>
+                        <div className="flex items-center justify-end gap-1.5 text-[#e3b341]">
+                          <Star className="w-3.5 h-3.5 fill-current" />
+                          <span className="font-mono text-sm font-medium">{formatNumber(repo.stars)}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-right overflow-hidden">
                         <span className="font-mono text-sm text-[#C9D1D9]">{formatNumber(repo.forks)}</span>
@@ -481,8 +487,8 @@ export default function App() {
                   {selectedRepo.description}
                 </p>
                 <div className="flex items-center gap-4 mt-3">
-                  <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
-                    <Star className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.stars)}</span>
+                  <span className="flex items-center gap-1.5 text-sm text-[#e3b341]">
+                    <Star className="w-4 h-4 fill-current" /> <span className="font-mono font-medium">{formatNumber(selectedRepo.stars)}</span>
                   </span>
                   <span className="flex items-center gap-1.5 text-sm text-[#8B949E]">
                     <GitFork className="w-4 h-4" /> <span className="font-mono text-white">{formatNumber(selectedRepo.forks)}</span>
