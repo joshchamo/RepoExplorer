@@ -699,6 +699,16 @@ export default function App() {
                   <li><strong className="text-white">Data Parsing:</strong> PapaParse (for client-side CSV processing)</li>
                   <li><strong className="text-white">Automation:</strong> GitHub Actions (Weekly Cron Job)</li>
                 </ul>
+
+                <h3 className="text-white font-semibold text-base mt-6 flex items-center gap-2">
+                  <span>🔗</span> Contact & Source
+                </h3>
+                <p>
+                  <strong>GitHub Repository:</strong> <a href="https://github.com/joshchamo/RepoExplorer/" target="_blank" rel="noreferrer" className="text-[#3d93f5] hover:underline">https://github.com/joshchamo/RepoExplorer/</a>
+                </p>
+                <p>
+                  <strong>Email:</strong> <a href="mailto:joshchamo@gmail.com" className="text-[#3d93f5] hover:underline">joshchamo@gmail.com</a>
+                </p>
               </div>
             </div>
           </div>
