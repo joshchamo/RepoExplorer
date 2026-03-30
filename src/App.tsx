@@ -44,6 +44,24 @@ const VersionControlIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const RepoIcon = ({ organization, className }: { organization: string, className?: string }) => {
+  const [error, setError] = useState(false);
+  
+  if (error) {
+    return <Book className={className} />;
+  }
+  
+  return (
+    <img 
+      src={`https://avatars.githubusercontent.com/${organization}?s=48`} 
+      alt={organization}
+      loading="lazy"
+      className={cn("rounded-full object-cover", className)}
+      onError={() => setError(true)}
+    />
+  );
+};
+
 export default function App() {
   const [data, setData] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -379,7 +397,7 @@ export default function App() {
                 >
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
-                      <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
+                      <RepoIcon organization={repo.organization} className="w-4 h-4 text-[#8B949E] shrink-0" />
                       <h3 className="text-[15px] font-semibold text-[#3d93f5] group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
                         {String(repo.organization).toLowerCase() === String(repo.repo_name).toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                       </h3>
@@ -435,7 +453,7 @@ export default function App() {
                     >
                       <td className="px-4 py-3 overflow-hidden">
                         <div className="flex items-center gap-2 truncate">
-                          <Book className="w-4 h-4 text-[#8B949E] shrink-0" />
+                          <RepoIcon organization={repo.organization} className="w-4 h-4 text-[#8B949E] shrink-0" />
                           <span className="text-[#3d93f5] text-sm font-medium group-hover:underline truncate" title={`${repo.organization}/${repo.repo_name}`}>
                             {String(repo.organization).toLowerCase() === String(repo.repo_name).toLowerCase() ? repo.repo_name : `${repo.organization}/${repo.repo_name}`}
                           </span>
@@ -483,7 +501,7 @@ export default function App() {
             <header className="h-[72px] flex items-center justify-between px-6 border-b border-[#30363D] shrink-0">
               <div className="flex flex-col truncate pr-4">
                 <div className="flex items-center gap-2 truncate">
-                  <Book className="w-5 h-5 text-[#8B949E] shrink-0" />
+                  <RepoIcon organization={selectedRepo.organization} className="w-5 h-5 text-[#8B949E] shrink-0" />
                   <h2 className="text-lg font-semibold text-white truncate">
                     {selectedRepo.organization}/{selectedRepo.repo_name}
                   </h2>
