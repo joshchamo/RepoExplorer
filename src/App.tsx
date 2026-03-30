@@ -576,7 +576,30 @@ export default function App() {
                 {readmeContent && (
                   <div className="relative bg-[#0D1117] border border-[#30363D] rounded-lg p-4 overflow-hidden max-h-[400px]">
                     <div className="text-sm text-[#C9D1D9] font-sans text-[13px] leading-relaxed [&_a]:text-[#3d93f5] [&_a]:hover:underline [&_h1]:font-bold [&_h1]:text-base [&_h1]:mb-2 [&_h1]:mt-4 first:[&_h1]:mt-0 [&_h2]:font-semibold [&_h2]:text-sm [&_h2]:mb-2 [&_h2]:mt-3 [&_h3]:font-medium [&_h3]:mb-1 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:mb-3 [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:mb-3 [&_code]:bg-[#161B22] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_pre]:bg-[#161B22] [&_pre]:p-2 [&_pre]:rounded [&_pre]:mb-3 [&_pre]:overflow-x-auto [&_blockquote]:border-l-2 [&_blockquote]:border-[#30363D] [&_blockquote]:pl-3 [&_blockquote]:text-[#8B949E] [&_table]:w-full [&_table]:mb-3 [&_th]:border-b [&_th]:border-[#30363D] [&_th]:text-left [&_th]:pb-1 [&_td]:border-b [&_td]:border-[#30363D]/50 [&_td]:py-1">
-                      <Markdown>{readmeContent}</Markdown>
+                      <Markdown
+                        components={{
+                          a: ({ href, children, ...props }) => {
+                            let absoluteHref = href;
+                            if (href && !href.startsWith('http') && !href.startsWith('mailto:')) {
+                              const repoUrl = `https://github.com/${selectedRepo.organization}/${selectedRepo.repo_name}`;
+                              if (href.startsWith('#')) {
+                                absoluteHref = `${repoUrl}${href}`;
+                              } else if (href.startsWith('/')) {
+                                absoluteHref = `${repoUrl}/tree/main${href}`;
+                              } else {
+                                absoluteHref = `${repoUrl}/tree/main/${href}`;
+                              }
+                            }
+                            return (
+                              <a href={absoluteHref} target="_blank" rel="noreferrer" {...props}>
+                                {children}
+                              </a>
+                            );
+                          }
+                        }}
+                      >
+                        {readmeContent}
+                      </Markdown>
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#0D1117] to-transparent rounded-b-lg"></div>
                   </div>
