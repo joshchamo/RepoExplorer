@@ -6,7 +6,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import Papa from 'papaparse';
 import Markdown from 'react-markdown';
-import { Search, Grid, List, ChevronDown, Book, Star, GitFork, CircleDot, Clock, Shield, CheckCircle, X, ExternalLink, Activity, Info } from 'lucide-react';
+import { Search, Grid, List, ChevronDown, Book, Star, GitFork, CircleDot, Clock, Shield, CheckCircle, X, ExternalLink, Activity, Info, ArrowUp, ArrowDown } from 'lucide-react';
 import { Repo, fallbackData } from './data';
 import { cn } from './lib/utils';
 
@@ -60,6 +60,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('stars');
+  const [sortDirection, setSortDirection] = useState<'desc' | 'asc'>('desc');
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [showAbout, setShowAbout] = useState(false);
   const [readmeContent, setReadmeContent] = useState<string | null>(null);
@@ -217,15 +218,17 @@ export default function App() {
     }
 
     return filtered.sort((a, b) => {
+      let result = 0;
       switch (sortOption) {
-        case 'stars': return (b.stars || 0) - (a.stars || 0);
-        case 'forks': return (b.forks || 0) - (a.forks || 0);
-        case 'issues': return (b.open_issues || 0) - (a.open_issues || 0);
-        case 'age': return (a.age_days || 0) - (b.age_days || 0);
-        default: return 0;
+        case 'stars': result = (b.stars || 0) - (a.stars || 0); break;
+        case 'forks': result = (b.forks || 0) - (a.forks || 0); break;
+        case 'issues': result = (b.open_issues || 0) - (a.open_issues || 0); break;
+        case 'age': result = (a.age_days || 0) - (b.age_days || 0); break;
+        default: result = 0; break;
       }
+      return sortDirection === 'asc' ? -result : result;
     });
-  }, [data, searchQuery, sortOption]);
+  }, [data, searchQuery, sortOption, sortDirection]);
 
   const formatNumber = (num: number | string) => {
     const n = Number(num);
@@ -297,8 +300,8 @@ export default function App() {
           
           <div className="w-px h-5 bg-[#30363D] hidden sm:block"></div>
 
-          <div className="flex items-center gap-2 text-sm text-[#8B949E]">
-            <span>Sort:</span>
+          <div className="flex items-center gap-1 text-sm text-[#8B949E]">
+            <span className="mr-1">Sort:</span>
             <select 
               className="bg-transparent border-none text-white focus:ring-0 cursor-pointer font-medium p-0"
               value={sortOption}
@@ -309,6 +312,13 @@ export default function App() {
               <option value="issues" className="bg-[#161B22]">Issues</option>
               <option value="age" className="bg-[#161B22]">Age</option>
             </select>
+            <button
+              onClick={() => setSortDirection(prev => prev === 'desc' ? 'asc' : 'desc')}
+              className="p-1 hover:text-white transition-colors ml-1 rounded-md hover:bg-[#30363D]/50"
+              title={sortDirection === 'desc' ? "Descending" : "Ascending"}
+            >
+              {sortDirection === 'desc' ? <ArrowDown className="w-4 h-4" /> : <ArrowUp className="w-4 h-4" />}
+            </button>
           </div>
 
           <div className="flex border border-[#30363D] rounded-md bg-[#0D1117] p-0.5">
